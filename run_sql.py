@@ -11,13 +11,13 @@ import os
 #
 # Where:
 #
-#   path_to_db: the path to the sqlite3 database file. default is 
+#   path_to_db: the path to the sqlite3 database file. default is
 #               "data/fashion_magazines.db"
-# 
-#   path_to_sql: the path to the file containing the sql query. default is 
+#
+#   path_to_sql: the path to the file containing the sql query. default is
 #               "sql/fashion_magazines.sql"
-# 
-#   path_to_csv: the path to the csv file that will be created with the results 
+#
+#   path_to_csv: the path to the csv file that will be created with the results
 #               of the query. default is "data/fashion_magazines.csv"
 
 
@@ -27,7 +27,7 @@ def get_paths() -> tuple:
     """
     parser = argparse.ArgumentParser()
     parser.add_argument("db", nargs="?",
-                        help="path to the sqlite3 database file", 
+                        help="path to the sqlite3 database file",
                         default="db/fashion_magazines.db")
     parser.add_argument("sql", nargs="?",
                         help="path to the file containing the sql query",
@@ -70,15 +70,15 @@ def main() -> None:
     path_to_db, path_to_sql, path_to_csv = get_paths()
     conn = create_connection(path_to_db)
     sql = get_sql(path_to_sql)
-    
+
     if sql == "-- Add your SQL here" or sql == "":
         print("Error: Add your sql to the sql/fashion_magazines.sql file before running.")
         exit(1)
-    
-    if conn is not None:
-        movies = pd.read_sql(sql, conn)
 
-        if len(movies) == 0:
+    if conn is not None:
+        magazines = pd.read_sql(sql, conn)
+
+        if len(magazines) == 0:
             print("Error: query did not return any results")
             exit(1)
         csv_dir = os.path.dirname(path_to_csv)
@@ -86,12 +86,12 @@ def main() -> None:
         if not os.path.exists(csv_dir):
             os.makedirs(csv_dir)
 
-        movies.to_csv(path_to_csv, index=False)
+        magazines.to_csv(path_to_csv, index=False)
 
     else:
         print("Error: Could not connect to database.")
         exit(1)
-        
+
     conn.close()
 
     return None
